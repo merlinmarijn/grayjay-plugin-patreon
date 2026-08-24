@@ -6,8 +6,8 @@
 	"platformUrl": "https://patreon.com",
 	"sourceUrl": "https://raw.githubusercontent.com/merlinmarijn/grayjay-plugin-patreon/master/PatreonConfig.json",
 	"repositoryUrl": "https://github.com/merlinmarijn/grayjay-plugin-patreon",
-	"scriptUrl": "./PatreonScript.js",
-	"version": 33,
+	"scriptUrl": "./PatreonScript.js?v=34",
+	"version": 34,
 	"iconUrl": "./patreon_logo.png",
 	"id": "df0007c4-1198-44a9-a4d2-d9e5a6e2457a",
 	"scriptSignature": "gqLVyVknKT8UrbMDYfIGP0RGzS6BZlN3S1ZgI0Ho2I+gIU1+ui32tN9wGn14VBs5tts87inzOJyjLDKMGfqWTc/zmAADT3ldWSJGKxamFnqc1blttVP2S/RLfP/IcuII8pmxist+YTO5hLvyuml0ljoGqstXYQqx3ieuKjal37j17TlXljEwXdgJUaSNcYwt4s60gHl7dF2NJdy0p89JBzoyw2m+cvAnEM8Fb98Ml6JTyKQfDwZb6UDOAYvrRjFOeU3B734fpAEhJZ8jAI4uOzRUGOz59laEBibVpmKHWRbC1aUBtnkLxdj9nW+TCwS31hpnEAGeuYrs0gNomrIrNA==",
@@ -22,6 +22,9 @@
 		"patreon.com"
 	],
 	"changelog": {
+		"34": [
+			"Fix: Version plugin script downloads so Grayjay cannot combine a new signature with a cached older script;"
+		],
 		"33": [
 			"Fix: Extract the signed CDN playlist URL from Patreon's authenticated HLS handoff manifest;"
 		],
