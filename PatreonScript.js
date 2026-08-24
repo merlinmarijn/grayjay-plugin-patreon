@@ -1721,11 +1721,22 @@ function createVideoDescriptor(postFile) {
 	if (!postFile?.url) return null;
 	
 	if (postFile.url.includes('.m3u8')) {
+		// Patreon returns an authenticated handoff URL such as
+		// /api/video/{id}/manifest.m3u8. Grayjay fetches HLS manifests outside the
+		// plugin's authenticated HTTP client, so passing that URL through directly
+		// results in a 403. Resolve the handoff here while the Patreon cookie jar is
+		// available; resp.url is the final signed CDN/Mux URL after redirects.
+		const manifestResponse = httpRequest({
+			url: postFile.url,
+			useAuthenticated: true
+		});
+		const manifestUrl = manifestResponse.url || postFile.url;
+
 		return new VideoSourceDescriptor([
 			new HLSSource({
 				name: "Original",
 				duration: postFile.duration,
-				url: postFile.url,
+				url: manifestUrl,
 				requestModifier: PATREON_REQUEST_MODIFIER
 			})
 		]);

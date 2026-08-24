@@ -6,7 +6,8 @@
     "start": "node server.js",
     "sign": "node scripts/sign-plugin.js",
     "verify": "node scripts/verify-signature.js",
-    "check": "node --check PatreonScript.js && node --check server.js && node --check scripts/sign-plugin.js && node --check scripts/verify-signature.js && npm run verify"
+    "test": "node scripts/test-plugin.js",
+    "check": "node --check PatreonScript.js && node --check server.js && node --check scripts/sign-plugin.js && node --check scripts/verify-signature.js && node --check scripts/test-plugin.js && npm test && npm run verify"
   },
   "engines": {
     "node": ">=18"
