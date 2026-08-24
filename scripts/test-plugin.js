@@ -89,6 +89,7 @@ assert.equal(
     "https://www.patreon.com/api/video/123/renditions/original.m3u8?u=1&expires=2&signature=signed"
 );
 assert.equal(hlsDescriptor.videoSources[0].duration, 42);
+assert.ok(hlsDescriptor.videoSources[0] instanceof HLSSource);
 assert.ok(hlsDescriptor.videoSources[0].requestModifier);
 
 manifestResponseForUrl = (url) => url.includes("/renditions/") ? {
@@ -120,5 +121,19 @@ const directDescriptor = vm.runInContext(`createVideoDescriptor({
 
 assert.equal(requests.length, 3, "Direct video files should not make a manifest request");
 assert.equal(directDescriptor.videoSources[0].url, "https://cdn.example/video.mp4");
+
+const nativeVideoDownload = vm.runInContext(`getNativeVideoDownload({
+    relationships: { media: { data: [{ id: "video-media" }] } }
+}, new Map([["media:video-media", {
+    type: "media",
+    id: "video-media",
+    attributes: {
+        download_url: "https://cdn.example/native-video.mp4?token=signed",
+        mimetype: "video/mp4"
+    }
+}]]))`, context);
+
+assert.equal(nativeVideoDownload.url, "https://cdn.example/native-video.mp4?token=signed");
+assert.equal(nativeVideoDownload.container, "video/mp4");
 
 console.log("Patreon media URL tests passed.");

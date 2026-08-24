@@ -6,11 +6,11 @@
 	"platformUrl": "https://patreon.com",
 	"sourceUrl": "https://raw.githubusercontent.com/merlinmarijn/grayjay-plugin-patreon/refs/heads/master/PatreonConfig.json",
 	"repositoryUrl": "https://github.com/merlinmarijn/grayjay-plugin-patreon",
-	"scriptUrl": "./PatreonScript.js?v=35",
-	"version": 35,
+	"scriptUrl": "./PatreonScript.js?v=36",
+	"version": 36,
 	"iconUrl": "./patreon_logo.png",
 	"id": "df0007c4-1198-44a9-a4d2-d9e5a6e2457a",
-	"scriptSignature": "LjbVMwa5zhpC5SF4leqb1s2Eflv1BoCzhtJealUvLJTokKo9cEKOzKgAbUEaXvifnMwySwzErCz3tfu6jHwWbZ/645eS7x8WjChDYepDrFhU3F4ksYGhv5t2sbv+EPjyxb59dvDSFuZu3vf6fivKbPijB6ui+mvi68R8nd5exfOZ19tilkqQ4t64psHq97ir+opzQjbNGIqLjX//kJunCMzjYgrCf4RpEzLSdOIUZA/kCffu9EsQkoLAktQkzsoYAs5zEIzKZ8lCRn8YXQyPELI0hOFOh8MeW9C3sbK2tOfAaUq3gDziN0pa0l8Asykqcf3Mfh6PFEbS9jSZoGtRFA==",
+	"scriptSignature": "AhKlnTXSUH5qlC56zviozTCVPY8vBfzeMFWwzwNFNDe3sSh5nq/xx8Kiwm6J8g/Y9M8wIQx/QunoW1uxOO/Yt6+SnVEr1VqirFpvbAG4Vj06Fhgc++dId9R1CVG4Zf8NMl8FjG0OTDy8yAP0pedDa1NexRj9EBzRKyCd5JgwknaETEge8G4XfKrrWkY9fOjhKb6bdWHYLtGCzW1fO4cNn6xgHPMGIPiy1GvQhYekPsQPyn/RZjGiz2ghoCI8c8H9wlYMsA0+20y30NPYGwwxM3zA01+tm7g1FNS9XuPGm+KefgVFKbiqWDXflh34Sn/9RMRrLX/MWhYhaMmDlKR9QQ==",
 	"scriptPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzKIe8RMGYQ8bKkHQ/zWSkTp8fG9bDqXPoVIITZF496esdu55KRgeBTNY75RAiTIQjk2zS6tktRq+fdyxkAbZMD7XfWcBX8w7wlQYElf1e1ZZjAM1pm4yTIsuRdaUwW39jZ+RPEaX1ezX3N7tClzAWRu3m+DvOS06J/ZFYg7qhcJc/zEwU9cTONHQeh8UGA0CgshG7WznjkIyHCk71zzhtn+eZTZttqQ2nhhvjNZfOQIT9FY0keYhmlEgsxpaT3D8rvPvYWCdnm/NR8hpalbN0AxP0Z7QZQFsBo3fxyE+iXbsTVfskMesot7gPHZHbuCoqy61wJG11j6JmxVYOgbXHwIDAQAB",
 	"packages": [
 		"Http",
@@ -22,6 +22,9 @@
 		"patreon.com"
 	],
 	"changelog": {
+		"36": [
+			"Fix: Prefer Patreon's signed native-video MP4 download URL for reliable desktop playback;"
+		],
 		"35": [
 			"Fix: Follow Patreon's authenticated master and rendition playlists to obtain the signed playback URL;"
 		],

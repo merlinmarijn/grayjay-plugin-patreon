@@ -659,7 +659,7 @@ source.getContentDetails = function (url) {
             // campaign is needed for the author; images resolves image_file posts (image_order -> media)
             // so they open on desktop. A bare fetch omits images; specifying include overrides defaults.
             url: BASE_URL_API + "/posts/" + postId + "?" + buildQuery({
-                "include": "campaign,images,attachments_media",
+                "include": "campaign,images,media,attachments_media",
                 // vanity lets campaignChannelUrl emit a canonical patreon.com author URL for custom-domain creators.
                 "fields[campaign]": CAMPAIGN_CHANNEL_FIELDS,
                 "fields[media]": "id,image_urls,display,download_url,metadata,file_name,mimetype,size_bytes,state"
@@ -1444,6 +1444,7 @@ source.getContentRecommendations = function (url) {
 function mapToVideoContent(post, context, includedLookup) {
 	const attrs = post?.attributes;
 	if (!attrs?.post_file?.url) return null;
+	const nativeVideo = getNativeVideoDownload(post, includedLookup);
 
 	const contentUrl = addUrlHint(attrs.url || (BASE_URL + "/posts/" + post.id), 'isPatreonMediaContent');
 
@@ -1459,8 +1460,31 @@ function mapToVideoContent(post, context, includedLookup) {
 		thumbnails: new Thumbnails([
 			new Thumbnail(attrs.thumbnail?.url || attrs.image?.thumb_url, 1)
 		].filter(t => t.url)),
-		video: createVideoDescriptor(attrs.post_file)
+		video: nativeVideo ? new VideoSourceDescriptor([
+			new VideoUrlSource({
+				name: "Original",
+				duration: attrs.post_file.duration || 0,
+				container: nativeVideo.container,
+				url: nativeVideo.url,
+				requestModifier: PATREON_REQUEST_MODIFIER
+			})
+		]) : createVideoDescriptor(attrs.post_file)
 	});
+}
+
+function getNativeVideoDownload(post, includedLookup) {
+	const refs = post?.relationships?.media?.data || [];
+	for (const ref of refs) {
+		const media = includedLookup instanceof Map
+			? includedLookup.get(`media:${ref.id}`)
+			: includedLookup?.included?.find(item => item.id === ref.id && item.type === "media");
+		const attrs = media?.attributes;
+		if (!attrs?.download_url) continue;
+		const container = attrs.mimetype || attrs.metadata?.mimetype || "video/mp4";
+		if (container.startsWith("video/"))
+			return { url: attrs.download_url, container };
+	}
+	return null;
 }
 
 // Maps post to PlatformVideoDetails for audio content
