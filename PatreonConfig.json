@@ -1,63 +1,42 @@
 {
 	"name": "Patreon - Custom",
 	"description": "Patreon is a subscription platform allowing creators to release membership only content.",
-	"author": "FUTO",
-	"authorUrl": "https://futo.tech",
+	"author": "merlinmarijn",
+	"authorUrl": "https://github.com/merlinmarijn",
 	"platformUrl": "https://patreon.com",
-	"sourceUrl": "https://plugins.grayjay.app/Patreon/PatreonConfig.json",
-	"repositoryUrl": "https://gitlab.futo.org/videostreaming/plugins/patreon",
+	"sourceUrl": "https://raw.githubusercontent.com/merlinmarijn/grayjay-plugin-patreon/master/PatreonConfig.json",
+	"repositoryUrl": "https://github.com/merlinmarijn/grayjay-plugin-patreon",
 	"scriptUrl": "./PatreonScript.js",
-	"version": 30,
-
+	"version": 31,
 	"iconUrl": "./patreon_logo.png",
-	"id": "aac9e9f0-24b5-11ee-be56-0242ac120002",
-	
-	"scriptSignature": "",
-	"scriptPublicKey": "",
-	"packages": ["Http","DOMParser"],
-	
+	"id": "df0007c4-1198-44a9-a4d2-d9e5a6e2457a",
+	"scriptSignature": "yMbT5ciT0JSiRErr5JzWb3WCRLOqkSeAu1Cb0T532HcGLwSN3aRFVUdNnG6Tpj9hv52ySkIeZe4ECPM52h7pQND9rkSBSTtOMmKQ99Ia2IHyL5q0bF9IK5FVpZRymw1Jo31XE1a/+K5mjCQU+KZ/vJ44X2fo+6psSEmUBXdHw8ZCSnxRkTdGzgQxX/cp+6O6+Bw6PZVgjc8D7tXYvQo/n+R05EsJyKiUlcAPLkixq6UlWnp9qU8qlhwA+9+eCIbMInaeBXqyPli55NuZzYV0QjstNTNoazL2mev/htoZSLaj3JmQvYf2dawi6XqQP86w6EQRToSO4KE2itcEQKQFxA==",
+	"scriptPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzKIe8RMGYQ8bKkHQ/zWSkTp8fG9bDqXPoVIITZF496esdu55KRgeBTNY75RAiTIQjk2zS6tktRq+fdyxkAbZMD7XfWcBX8w7wlQYElf1e1ZZjAM1pm4yTIsuRdaUwW39jZ+RPEaX1ezX3N7tClzAWRu3m+DvOS06J/ZFYg7qhcJc/zEwU9cTONHQeh8UGA0CgshG7WznjkIyHCk71zzhtn+eZTZttqQ2nhhvjNZfOQIT9FY0keYhmlEgsxpaT3D8rvPvYWCdnm/NR8hpalbN0AxP0Z7QZQFsBo3fxyE+iXbsTVfskMesot7gPHZHbuCoqy61wJG11j6JmxVYOgbXHwIDAQAB",
+	"packages": [
+		"Http",
+		"DOMParser"
+	],
 	"allowEval": false,
 	"allowUrls": [
 		"www.patreon.com",
 		"patreon.com"
 	],
 	"changelog": {
-		"30": [
-			"Fix: Opening posts (video, audio, image, embed, members-only) on desktop;",
-			"Fix: Comments failing to load;",
-			"Fix: Recommendations failing to load;",
-			"Fix: Image post thumbnails;",
-			"Fix: Content failing to load during rate limits or captchas;",
-			"Fix: Recognizing channels opened via alternate or redirected URLs;",
-			"Feature: Add support for creators using custom domains;",
-			"Improvement: Show downloadable file attachments on posts;",
-			"Improvement: Load more content on Home;"
+		"18": [
+			"support podcast post types;",
+			"fix comments pagination;",
+			"fix channel details description, banner and thumbnail for some creators;"
 		],
-		"29": [
-			"Fix: Home failing in some circumstances under VPNs;",
-			"Fix: Channel and channel content failing to load under VPNs;",
-			"Improvement: search within a creator's content",
-			"Improvement: expose creator collections as channel playlists (android);"
+		"19": [
+			"fix playing content;"
 		],
-		"28": [
-			"Fix: Audio-only posts (podcasts) not playing due to missing media container type;",
-			"Fix: Comment replies;"
+		"20": [
+			"Improvement: Load content on home;",
+			"Improvement: Support deep linking to audio and video content types;",
+			"Improvement: Add captcha resolution support;"
 		],
-		"27": [
-			"Fix: Post content (text) support on Desktop;",
-			"Improvement: Enable article support for text and image posts (richer content) on Android app builds 381+;"
-		],
-		"26": [
-			"Fix: Change authorUrl from futo.org to futo.tech;",
-			"Fix: Missing post (text) content details;",
-			"Improvement: Prepare article support;"
-		],
-		"25": [
-			"Improvement: Show unavailable message for members-only content;",
-			"Fix: Use webview's user-agent instead of hardcoded one to avoid bot detection;"
-		],
-		"24": [
-			"Fix: Video playback for podcast posts containing video streams;"
+		"21": [
+			"Fix: Adjust channel parsing;"
 		],
 		"23": [
 			"Fix: Thumbnail for Nested Content (example Youtube);",
@@ -71,21 +50,46 @@
 			"Improvement: Handle removed and non-existent pages;",
 			"Improvement: Extract social links;"
 		],
-		"21": [
-			"Fix: Adjust channel parsing;"
+		"24": [
+			"Fix: Video playback for podcast posts containing video streams;"
 		],
-		"20": [
-			"Improvement: Load content on home;",
-			"Improvement: Support deep linking to audio and video content types;",
-			"Improvement: Add captcha resolution support;"
+		"25": [
+			"Improvement: Show unavailable message for members-only content;",
+			"Fix: Use webview's user-agent instead of hardcoded one to avoid bot detection;"
 		],
-		"19": [
-			"fix playing content;"
+		"26": [
+			"Fix: Change authorUrl from futo.org to futo.tech;",
+			"Fix: Missing post (text) content details;",
+			"Improvement: Prepare article support;"
 		],
-		"18": [
-			"support podcast post types;",
-			"fix comments pagination;",
-			"fix channel details description, banner and thumbnail for some creators;"
+		"27": [
+			"Fix: Post content (text) support on Desktop;",
+			"Improvement: Enable article support for text and image posts (richer content) on Android app builds 381+;"
+		],
+		"28": [
+			"Fix: Audio-only posts (podcasts) not playing due to missing media container type;",
+			"Fix: Comment replies;"
+		],
+		"29": [
+			"Fix: Home failing in some circumstances under VPNs;",
+			"Fix: Channel and channel content failing to load under VPNs;",
+			"Improvement: search within a creator's content",
+			"Improvement: expose creator collections as channel playlists (android);"
+		],
+		"30": [
+			"Fix: Opening posts (video, audio, image, embed, members-only) on desktop;",
+			"Fix: Comments failing to load;",
+			"Fix: Recommendations failing to load;",
+			"Fix: Image post thumbnails;",
+			"Fix: Content failing to load during rate limits or captchas;",
+			"Fix: Recognizing channels opened via alternate or redirected URLs;",
+			"Feature: Add support for creators using custom domains;",
+			"Improvement: Show downloadable file attachments on posts;",
+			"Improvement: Load more content on Home;"
+		],
+		"31": [
+			"Initial release of the independently installable custom fork;",
+			"Fix: Use the custom GitHub repository for installs and updates;"
 		]
 	},
 	"settings": [
@@ -144,32 +148,38 @@
 			"isAdvanced": "true"
 		}
 	],
-	
 	"authentication": {
 		"userAgent": null,
 		"loginUrl": "https://www.patreon.com/login",
-		"cookiesToFind": ["session_id"],
+		"cookiesToFind": [
+			"session_id"
+		],
 		"cookiesExclOthers": false
 	},
-
 	"authenticationDesktop": {
 		"userAgent": null,
 		"loginUrl": "https://www.patreon.com/login",
-		"cookiesToFind": ["session_id"],
+		"cookiesToFind": [
+			"session_id"
+		],
 		"cookiesExclOthers": false,
 		"useMobileEmulation": false
 	},
-
 	"captcha": {
 		"userAgent": null,
 		"captchaUrl": null,
-		"cookiesToFind": ["cf_clearance"]
+		"cookiesToFind": [
+			"cf_clearance"
+		]
 	},
 	"captchaDesktop": {
 		"captchaUrl": null,
-		"cookiesToFind": ["cf_clearance"],
+		"cookiesToFind": [
+			"cf_clearance"
+		],
 		"useMobileEmulation": false
 	},
-
-	"supportedClaimTypes": [12]
+	"supportedClaimTypes": [
+		12
+	]
 }

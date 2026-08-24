@@ -1,61 +1,70 @@
 import { createServer } from "node:http";
-import { networkInterfaces } from 'os';
+import { networkInterfaces } from "node:os";
 import { readFile } from "node:fs/promises";
+
 const PORT = 8080;
-// Define a map of files to serve
+
 const files = {
     "/PatreonScript.js": {
-        content: await readFile("PatreonScript.js"),
+        path: "PatreonScript.js",
         type: "application/javascript",
     },
-    "/PatreonConfig.json": {
-        content: await readFile("PatreonConfig.json"),
-        type: "application/json",
-    },
-    "/PatreonIcon.png": {
-        content: await readFile("patreon_logo.png"),
+    "/patreon_logo.png": {
+        path: "patreon_logo.png",
         type: "image/png",
     },
 };
-function getLocalIPAddress() {
-    const br = networkInterfaces();
-    const network_devices = Object.values(br);
-    if (network_devices !== undefined) {
-        for (const network_interface of network_devices) {
-            if (network_interface === undefined) {
-                continue;
-            }
-            for (const { address, family } of network_interface) {
-                if (family === "IPv4" && address !== "127.0.0.1") {
-                    return address;
-                }
-            }
-        }
-    }
-    throw new Error("panic");
+
+function getLocalIPAddresses() {
+    return Object.values(networkInterfaces())
+        .flatMap((networkInterface) => networkInterface ?? [])
+        .filter(({ family, internal }) => family === "IPv4" && !internal)
+        .map(({ address }) => address);
 }
-createServer((req, res) => {
-    const file = (() => {
-        switch (req.url) {
-            case "/PatreonScript.js":
-                return files[req.url];
-            case "/PatreonConfig.json":
-                return files[req.url];
-            case "/PatreonIcon.png":
-                return files[req.url];
-            default:
-                return undefined;
+
+createServer(async (req, res) => {
+    const requestUrl = new URL(req.url ?? "/", `http://${req.headers.host ?? `localhost:${PORT}`}`);
+    const headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store",
+    };
+
+    try {
+        if (requestUrl.pathname === "/PatreonConfig.json") {
+            const config = JSON.parse(await readFile("PatreonConfig.json", "utf8"));
+
+            // During local development, Grayjay must fetch the script and icon
+            // from this server instead of the production sourceUrl in the file.
+            config.sourceUrl = `http://${req.headers.host ?? `localhost:${PORT}`}/PatreonConfig.json`;
+
+            res.writeHead(200, { ...headers, "Content-Type": "application/json; charset=utf-8" });
+            res.end(JSON.stringify(config, null, "\t"));
+            return;
         }
-    })();
-    if (file !== undefined) {
-        res.writeHead(200, { "Content-Type": file.type });
-        res.end(file.content);
+
+        // Keep the old icon route working for anyone who bookmarked it.
+        const pathname = requestUrl.pathname === "/PatreonIcon.png"
+            ? "/patreon_logo.png"
+            : requestUrl.pathname;
+        const file = files[pathname];
+
+        if (file !== undefined) {
+            res.writeHead(200, { ...headers, "Content-Type": file.type });
+            res.end(await readFile(file.path));
+            return;
+        }
+    } catch (error) {
+        res.writeHead(500, { ...headers, "Content-Type": "text/plain; charset=utf-8" });
+        res.end(`Failed to serve plugin file: ${error.message}`);
         return;
     }
-    res.writeHead(404);
+
+    res.writeHead(404, { ...headers, "Content-Type": "text/plain; charset=utf-8" });
     res.end("File not found");
-    return;
-}).listen(PORT, () => {
-    console.log(`Server running at http://${getLocalIPAddress()}:${PORT}/PatreonConfig.json`);
+}).listen(PORT, "0.0.0.0", () => {
+    console.log("Grayjay development install URLs:");
+    console.log(`  http://localhost:${PORT}/PatreonConfig.json`);
+    for (const address of getLocalIPAddresses()) {
+        console.log(`  http://${address}:${PORT}/PatreonConfig.json`);
+    }
 });
-//# sourceMappingURL=server.js.map

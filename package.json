@@ -1,0 +1,14 @@
+{
+  "name": "grayjay-plugin-patreon-custom",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "sign": "node scripts/sign-plugin.js",
+    "verify": "node scripts/verify-signature.js",
+    "check": "node --check PatreonScript.js && node --check server.js && node --check scripts/sign-plugin.js && node --check scripts/verify-signature.js && npm run verify"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
