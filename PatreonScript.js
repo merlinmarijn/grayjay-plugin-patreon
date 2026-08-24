@@ -1724,13 +1724,17 @@ function createVideoDescriptor(postFile) {
 		// Patreon returns an authenticated handoff URL such as
 		// /api/video/{id}/manifest.m3u8. Grayjay fetches HLS manifests outside the
 		// plugin's authenticated HTTP client, so passing that URL through directly
-		// results in a 403. Resolve the handoff here while the Patreon cookie jar is
-		// available; resp.url is the final signed CDN/Mux URL after redirects.
+		// results in a 403. Patreon responds with the signed CDN/Mux playlist URL in
+		// the manifest body (not as an HTTP redirect), so resolve that URL here while
+		// the Patreon cookie jar is available.
 		const manifestResponse = httpRequest({
 			url: postFile.url,
 			useAuthenticated: true
 		});
-		const manifestUrl = manifestResponse.url || postFile.url;
+		const manifestUrl = getFirstHlsPlaylistUrl(
+			manifestResponse.body,
+			manifestResponse.url || postFile.url
+		) || manifestResponse.url || postFile.url;
 
 		return new VideoSourceDescriptor([
 			new HLSSource({
@@ -1749,6 +1753,26 @@ function createVideoDescriptor(postFile) {
 				requestModifier: PATREON_REQUEST_MODIFIER
 			})
 		]);
+	}
+}
+
+// Returns the first media-playlist URI from an HLS manifest. Patreon currently
+// returns an absolute signed Mux URL, but resolving relative URIs keeps this
+// compatible if the handoff format changes.
+function getFirstHlsPlaylistUrl(manifest, manifestUrl) {
+	if (typeof manifest !== 'string' || !manifest.trim()) return null;
+
+	const playlistPath = manifest
+		.split(/\r?\n/)
+		.map(line => line.trim())
+		.find(line => line && !line.startsWith('#') && line.includes('.m3u8'));
+
+	if (!playlistPath) return null;
+
+	try {
+		return new URL(playlistPath, manifestUrl).toString();
+	} catch (_) {
+		return playlistPath;
 	}
 }
 

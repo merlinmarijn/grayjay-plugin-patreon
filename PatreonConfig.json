@@ -7,10 +7,10 @@
 	"sourceUrl": "https://raw.githubusercontent.com/merlinmarijn/grayjay-plugin-patreon/master/PatreonConfig.json",
 	"repositoryUrl": "https://github.com/merlinmarijn/grayjay-plugin-patreon",
 	"scriptUrl": "./PatreonScript.js",
-	"version": 32,
+	"version": 33,
 	"iconUrl": "./patreon_logo.png",
 	"id": "df0007c4-1198-44a9-a4d2-d9e5a6e2457a",
-	"scriptSignature": "AGw8Z6+Ne8gfdWsYuM9yBoB29aXKHm6hepG2BscPgm+OPylzSVYs0ri6SmrQjMfxBD9m1Q25dZQgR130lsYo0RfkalaGHkt+KHiaRW0GunKFTmMwv0b0qk7pKued/q6eRhH9suiOu8voYIpDdMEfunzhXpNzRIkaWExc8ir12L5e3eWIJMG77UVfnYxBDNuk13tZ241O52j9z2zChmxJCTEbaFIPGm2lHZ1DfeCT6ZZV+ye3R0+7IrUHPtE/vXtziYvgB4FtV3Q2G6jh9BAxAtqnA0+51PtjqSMduxxybNGtrsX4eLoU+JDU6bQR6U1K8p/2Bq/vgedSeGuGJJBEfw==",
+	"scriptSignature": "gqLVyVknKT8UrbMDYfIGP0RGzS6BZlN3S1ZgI0Ho2I+gIU1+ui32tN9wGn14VBs5tts87inzOJyjLDKMGfqWTc/zmAADT3ldWSJGKxamFnqc1blttVP2S/RLfP/IcuII8pmxist+YTO5hLvyuml0ljoGqstXYQqx3ieuKjal37j17TlXljEwXdgJUaSNcYwt4s60gHl7dF2NJdy0p89JBzoyw2m+cvAnEM8Fb98Ml6JTyKQfDwZb6UDOAYvrRjFOeU3B734fpAEhJZ8jAI4uOzRUGOz59laEBibVpmKHWRbC1aUBtnkLxdj9nW+TCwS31hpnEAGeuYrs0gNomrIrNA==",
 	"scriptPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzKIe8RMGYQ8bKkHQ/zWSkTp8fG9bDqXPoVIITZF496esdu55KRgeBTNY75RAiTIQjk2zS6tktRq+fdyxkAbZMD7XfWcBX8w7wlQYElf1e1ZZjAM1pm4yTIsuRdaUwW39jZ+RPEaX1ezX3N7tClzAWRu3m+DvOS06J/ZFYg7qhcJc/zEwU9cTONHQeh8UGA0CgshG7WznjkIyHCk71zzhtn+eZTZttqQ2nhhvjNZfOQIT9FY0keYhmlEgsxpaT3D8rvPvYWCdnm/NR8hpalbN0AxP0Z7QZQFsBo3fxyE+iXbsTVfskMesot7gPHZHbuCoqy61wJG11j6JmxVYOgbXHwIDAQAB",
 	"packages": [
 		"Http",
@@ -22,6 +22,9 @@
 		"patreon.com"
 	],
 	"changelog": {
+		"33": [
+			"Fix: Extract the signed CDN playlist URL from Patreon's authenticated HLS handoff manifest;"
+		],
 		"32": [
 			"Fix: Resolve authenticated Patreon HLS handoff URLs before desktop playback;"
 		],

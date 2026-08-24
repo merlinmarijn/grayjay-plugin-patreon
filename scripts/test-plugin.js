@@ -7,6 +7,14 @@ import { fileURLToPath } from "node:url";
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const pluginScript = await readFile(resolve(repositoryRoot, "PatreonScript.js"), "utf8");
 const requests = [];
+let manifestResponse = {
+    body: `#EXTM3U
+#EXT-X-STREAM-INF:BANDWIDTH=2500000,RESOLUTION=1920x1080
+https://stream.mux.com/playback-id.m3u8?token=signed`,
+    code: 200,
+    isOk: true,
+    url: "https://www.patreon.com/api/video/123/manifest.m3u8",
+};
 
 class VideoSourceDescriptor {
     constructor(videoSources) {
@@ -44,12 +52,7 @@ const context = vm.createContext({
     http: {
         GET(url, headers, useAuthenticated) {
             requests.push({ url, headers, useAuthenticated });
-            return {
-                body: "#EXTM3U",
-                code: 200,
-                isOk: true,
-                url: "https://stream.mux.com/playback-id.m3u8?token=signed",
-            };
+            return manifestResponse;
         },
     },
     VideoSourceDescriptor,
@@ -59,6 +62,7 @@ const context = vm.createContext({
     ContentPager: Pager,
     VideoPager: Pager,
     CommentPager: Pager,
+    URL,
     log() {},
     console,
 });
@@ -78,12 +82,29 @@ assert.equal(hlsDescriptor.videoSources[0].url, "https://stream.mux.com/playback
 assert.equal(hlsDescriptor.videoSources[0].duration, 42);
 assert.ok(hlsDescriptor.videoSources[0].requestModifier);
 
+manifestResponse = {
+    body: "#EXTM3U\n#EXT-X-STREAM-INF:BANDWIDTH=1000000\nvariants/720p.m3u8?token=relative",
+    code: 200,
+    isOk: true,
+    url: "https://cdn.example/manifests/master.m3u8",
+};
+
+const relativeHlsDescriptor = vm.runInContext(`createVideoDescriptor({
+    url: "https://www.patreon.com/api/video/456/manifest.m3u8",
+    duration: 84
+})`, context);
+
+assert.equal(
+    relativeHlsDescriptor.videoSources[0].url,
+    "https://cdn.example/manifests/variants/720p.m3u8?token=relative"
+);
+
 const directDescriptor = vm.runInContext(`createVideoDescriptor({
     url: "https://cdn.example/video.mp4",
     duration: 21
 })`, context);
 
-assert.equal(requests.length, 1, "Direct video files should not make a manifest request");
+assert.equal(requests.length, 2, "Direct video files should not make a manifest request");
 assert.equal(directDescriptor.videoSources[0].url, "https://cdn.example/video.mp4");
 
 console.log("Patreon media URL tests passed.");
