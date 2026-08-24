@@ -7,7 +7,7 @@ A custom Grayjay Patreon source based on FUTO's official Patreon plugin.
 In Grayjay, open **Sources**, choose **Add source**, then **Enter URL** and paste:
 
 ```text
-https://raw.githubusercontent.com/merlinmarijn/grayjay-plugin-patreon/master/PatreonConfig.json
+https://raw.githubusercontent.com/merlinmarijn/grayjay-plugin-patreon/refs/heads/master/PatreonConfig.json
 ```
 
 The custom source has its own UUID, so it can be installed alongside the official

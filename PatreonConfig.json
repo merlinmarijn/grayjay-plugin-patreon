@@ -4,13 +4,13 @@
 	"author": "merlinmarijn",
 	"authorUrl": "https://github.com/merlinmarijn",
 	"platformUrl": "https://patreon.com",
-	"sourceUrl": "https://raw.githubusercontent.com/merlinmarijn/grayjay-plugin-patreon/master/PatreonConfig.json",
+	"sourceUrl": "https://raw.githubusercontent.com/merlinmarijn/grayjay-plugin-patreon/refs/heads/master/PatreonConfig.json",
 	"repositoryUrl": "https://github.com/merlinmarijn/grayjay-plugin-patreon",
-	"scriptUrl": "./PatreonScript.js?v=34",
-	"version": 34,
+	"scriptUrl": "./PatreonScript.js?v=35",
+	"version": 35,
 	"iconUrl": "./patreon_logo.png",
 	"id": "df0007c4-1198-44a9-a4d2-d9e5a6e2457a",
-	"scriptSignature": "gqLVyVknKT8UrbMDYfIGP0RGzS6BZlN3S1ZgI0Ho2I+gIU1+ui32tN9wGn14VBs5tts87inzOJyjLDKMGfqWTc/zmAADT3ldWSJGKxamFnqc1blttVP2S/RLfP/IcuII8pmxist+YTO5hLvyuml0ljoGqstXYQqx3ieuKjal37j17TlXljEwXdgJUaSNcYwt4s60gHl7dF2NJdy0p89JBzoyw2m+cvAnEM8Fb98Ml6JTyKQfDwZb6UDOAYvrRjFOeU3B734fpAEhJZ8jAI4uOzRUGOz59laEBibVpmKHWRbC1aUBtnkLxdj9nW+TCwS31hpnEAGeuYrs0gNomrIrNA==",
+	"scriptSignature": "LjbVMwa5zhpC5SF4leqb1s2Eflv1BoCzhtJealUvLJTokKo9cEKOzKgAbUEaXvifnMwySwzErCz3tfu6jHwWbZ/645eS7x8WjChDYepDrFhU3F4ksYGhv5t2sbv+EPjyxb59dvDSFuZu3vf6fivKbPijB6ui+mvi68R8nd5exfOZ19tilkqQ4t64psHq97ir+opzQjbNGIqLjX//kJunCMzjYgrCf4RpEzLSdOIUZA/kCffu9EsQkoLAktQkzsoYAs5zEIzKZ8lCRn8YXQyPELI0hOFOh8MeW9C3sbK2tOfAaUq3gDziN0pa0l8Asykqcf3Mfh6PFEbS9jSZoGtRFA==",
 	"scriptPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzKIe8RMGYQ8bKkHQ/zWSkTp8fG9bDqXPoVIITZF496esdu55KRgeBTNY75RAiTIQjk2zS6tktRq+fdyxkAbZMD7XfWcBX8w7wlQYElf1e1ZZjAM1pm4yTIsuRdaUwW39jZ+RPEaX1ezX3N7tClzAWRu3m+DvOS06J/ZFYg7qhcJc/zEwU9cTONHQeh8UGA0CgshG7WznjkIyHCk71zzhtn+eZTZttqQ2nhhvjNZfOQIT9FY0keYhmlEgsxpaT3D8rvPvYWCdnm/NR8hpalbN0AxP0Z7QZQFsBo3fxyE+iXbsTVfskMesot7gPHZHbuCoqy61wJG11j6JmxVYOgbXHwIDAQAB",
 	"packages": [
 		"Http",
@@ -22,6 +22,9 @@
 		"patreon.com"
 	],
 	"changelog": {
+		"35": [
+			"Fix: Follow Patreon's authenticated master and rendition playlists to obtain the signed playback URL;"
+		],
 		"34": [
 			"Fix: Version plugin script downloads so Grayjay cannot combine a new signature with a cached older script;"
 		],

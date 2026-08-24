@@ -1724,17 +1724,9 @@ function createVideoDescriptor(postFile) {
 		// Patreon returns an authenticated handoff URL such as
 		// /api/video/{id}/manifest.m3u8. Grayjay fetches HLS manifests outside the
 		// plugin's authenticated HTTP client, so passing that URL through directly
-		// results in a 403. Patreon responds with the signed CDN/Mux playlist URL in
-		// the manifest body (not as an HTTP redirect), so resolve that URL here while
-		// the Patreon cookie jar is available.
-		const manifestResponse = httpRequest({
-			url: postFile.url,
-			useAuthenticated: true
-		});
-		const manifestUrl = getFirstHlsPlaylistUrl(
-			manifestResponse.body,
-			manifestResponse.url || postFile.url
-		) || manifestResponse.url || postFile.url;
+		// results in a 403. Follow Patreon's protected child playlists here until the
+		// response URL contains the signed playback query Grayjay can use directly.
+		const manifestUrl = resolveAuthenticatedHlsUrl(postFile.url);
 
 		return new VideoSourceDescriptor([
 			new HLSSource({
@@ -1756,9 +1748,31 @@ function createVideoDescriptor(postFile) {
 	}
 }
 
-// Returns the first media-playlist URI from an HLS manifest. Patreon currently
-// returns an absolute signed Mux URL, but resolving relative URIs keeps this
-// compatible if the handoff format changes.
+function resolveAuthenticatedHlsUrl(initialUrl) {
+	let manifestUrl = initialUrl;
+	for (let depth = 0; depth < 5; depth++) {
+		const manifestResponse = httpRequest({
+			url: manifestUrl,
+			useAuthenticated: true
+		});
+		const responseUrl = manifestResponse.url || manifestUrl;
+		const childUrl = getFirstHlsPlaylistUrl(manifestResponse.body, responseUrl);
+		if (!childUrl || childUrl === manifestUrl)
+			return responseUrl;
+		try {
+			const childHost = new URL(childUrl).hostname.toLowerCase();
+			if (childHost !== 'patreon.com' && !childHost.endsWith('.patreon.com'))
+				return childUrl;
+		} catch (_) {
+			return childUrl;
+		}
+		manifestUrl = childUrl;
+	}
+	return manifestUrl;
+}
+
+// Returns the first child-playlist URI from an HLS manifest. Resolving relative
+// URIs is required for Patreon's protected rendition handoff.
 function getFirstHlsPlaylistUrl(manifest, manifestUrl) {
 	if (typeof manifest !== 'string' || !manifest.trim()) return null;
 
