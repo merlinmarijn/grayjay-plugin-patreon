@@ -100,6 +100,12 @@ source.enable = function (conf, settings, savedState) {
 	_settings = settings ?? {};
 
 	PATREON_REQUEST_MODIFIER.headers["User-Agent"] = getUserAgent();
+	// Patreon-hosted playlists require the logged-in session too. The player
+	// fetches these outside http.GET; let the engine attach domain-scoped auth.
+	PATREON_REQUEST_MODIFIER.options = {
+		applyAuthClient: http.getDefaultClient(true).clientId,
+		applyOtherHeaders: true
+	};
 
 	if (savedState) {
 		try {
@@ -659,7 +665,7 @@ source.getContentDetails = function (url) {
             // campaign is needed for the author; images resolves image_file posts (image_order -> media)
             // so they open on desktop. A bare fetch omits images; specifying include overrides defaults.
             url: BASE_URL_API + "/posts/" + postId + "?" + buildQuery({
-                "include": "campaign,images,media,attachments_media",
+                "include": "campaign,images,attachments_media",
                 // vanity lets campaignChannelUrl emit a canonical patreon.com author URL for custom-domain creators.
                 "fields[campaign]": CAMPAIGN_CHANNEL_FIELDS,
                 "fields[media]": "id,image_urls,display,download_url,metadata,file_name,mimetype,size_bytes,state"
@@ -1444,7 +1450,6 @@ source.getContentRecommendations = function (url) {
 function mapToVideoContent(post, context, includedLookup) {
 	const attrs = post?.attributes;
 	if (!attrs?.post_file?.url) return null;
-	const nativeVideo = getNativeVideoDownload(post, includedLookup);
 
 	const contentUrl = addUrlHint(attrs.url || (BASE_URL + "/posts/" + post.id), 'isPatreonMediaContent');
 
@@ -1460,31 +1465,8 @@ function mapToVideoContent(post, context, includedLookup) {
 		thumbnails: new Thumbnails([
 			new Thumbnail(attrs.thumbnail?.url || attrs.image?.thumb_url, 1)
 		].filter(t => t.url)),
-		video: nativeVideo ? new VideoSourceDescriptor([
-			new VideoUrlSource({
-				name: "Original",
-				duration: attrs.post_file.duration || 0,
-				container: nativeVideo.container,
-				url: nativeVideo.url,
-				requestModifier: PATREON_REQUEST_MODIFIER
-			})
-		]) : createVideoDescriptor(attrs.post_file)
+		video: createVideoDescriptor(attrs.post_file)
 	});
-}
-
-function getNativeVideoDownload(post, includedLookup) {
-	const refs = post?.relationships?.media?.data || [];
-	for (const ref of refs) {
-		const media = includedLookup instanceof Map
-			? includedLookup.get(`media:${ref.id}`)
-			: includedLookup?.included?.find(item => item.id === ref.id && item.type === "media");
-		const attrs = media?.attributes;
-		if (!attrs?.download_url) continue;
-		const container = attrs.mimetype || attrs.metadata?.mimetype || "video/mp4";
-		if (container.startsWith("video/"))
-			return { url: attrs.download_url, container };
-	}
-	return null;
 }
 
 // Maps post to PlatformVideoDetails for audio content
@@ -1745,18 +1727,11 @@ function createVideoDescriptor(postFile) {
 	if (!postFile?.url) return null;
 	
 	if (postFile.url.includes('.m3u8')) {
-		// Patreon returns an authenticated handoff URL such as
-		// /api/video/{id}/manifest.m3u8. Grayjay fetches HLS manifests outside the
-		// plugin's authenticated HTTP client, so passing that URL through directly
-		// results in a 403. Follow Patreon's protected child playlists here until the
-		// response URL contains the signed playback query Grayjay can use directly.
-		const manifestUrl = resolveAuthenticatedHlsUrl(postFile.url);
-
 		return new VideoSourceDescriptor([
 			new HLSSource({
 				name: "Original",
 				duration: postFile.duration,
-				url: manifestUrl,
+				url: postFile.url,
 				requestModifier: PATREON_REQUEST_MODIFIER
 			})
 		]);
@@ -1769,48 +1744,6 @@ function createVideoDescriptor(postFile) {
 				requestModifier: PATREON_REQUEST_MODIFIER
 			})
 		]);
-	}
-}
-
-function resolveAuthenticatedHlsUrl(initialUrl) {
-	let manifestUrl = initialUrl;
-	for (let depth = 0; depth < 5; depth++) {
-		const manifestResponse = httpRequest({
-			url: manifestUrl,
-			useAuthenticated: true
-		});
-		const responseUrl = manifestResponse.url || manifestUrl;
-		const childUrl = getFirstHlsPlaylistUrl(manifestResponse.body, responseUrl);
-		if (!childUrl || childUrl === manifestUrl)
-			return responseUrl;
-		try {
-			const childHost = new URL(childUrl).hostname.toLowerCase();
-			if (childHost !== 'patreon.com' && !childHost.endsWith('.patreon.com'))
-				return childUrl;
-		} catch (_) {
-			return childUrl;
-		}
-		manifestUrl = childUrl;
-	}
-	return manifestUrl;
-}
-
-// Returns the first child-playlist URI from an HLS manifest. Resolving relative
-// URIs is required for Patreon's protected rendition handoff.
-function getFirstHlsPlaylistUrl(manifest, manifestUrl) {
-	if (typeof manifest !== 'string' || !manifest.trim()) return null;
-
-	const playlistPath = manifest
-		.split(/\r?\n/)
-		.map(line => line.trim())
-		.find(line => line && !line.startsWith('#') && line.includes('.m3u8'));
-
-	if (!playlistPath) return null;
-
-	try {
-		return new URL(playlistPath, manifestUrl).toString();
-	} catch (_) {
-		return playlistPath;
 	}
 }
 
